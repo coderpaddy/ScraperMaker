@@ -8,39 +8,30 @@ B. For the created scraper to be used.
 import sys
 import requests
 from bs4 import BeautifulSoup
+from ScrapeTools import ScrapeTools
+from ScrapeErrors import ScrapeErrors
 
 
 # Main Utility Class
-# class ScrapeTools:
-
-class ScrapeErrors:
-    @staticmethod
-    def data_field_options_error(obj):
-        print(f" You have set {len(obj.which_data_fields)} fields to collect \n resseting...")
-        obj.which_data_fields = obj.AskDataFields()
-        if len(obj.which_data_fields) > 0:
-            return obj.ConfigureDataFields()
-        else:
-            print(" Something is going wrong, please start again")
-            sys.exit()
-
-
 class ScrapeOptions:
+    """
+    Docstring
+    """
     def __init__(self):
         self.main_url = input(" Please enter the main url to scrape including http/https: ")
-        self.which_data_fields = self.AskDataFields()
+        self.which_data_fields = self.ask_data_fields()
         self.data_field_options = self.ConfigureDataFields() if len(self.which_data_fields) > 0 else ScrapeErrors.data_field_options_error(self)
         self.has_own_data_pages = True if input("Would you like to scrape individual Product Pages? y/n: ").lower() == "y" else False
         self.link_for_each_data_page = self.GetPageUrlPattern() if self.has_own_data_pages is True else None
-        self.start_scrape = self.IndividualScrape() if self.has_own_data_pages is True else self.SeperateScrape()
+        self.start_scrape = self.individual_scrape() if self.has_own_data_pages is True else self.all_together_scrape()
 
-    def AskDataFields(self):
+    def ask_data_fields(self):
         data_fields_to_collect = []
         done = False
         while done is False:
             field_to_collect = input(" Please enter the name of this heading of data e.g Product Name: ")
             if field_to_collect != "":
-                data_fields_to_collect.append(field_to_collect) 
+                data_fields_to_collect.append(field_to_collect)
             user_wants_more = input(" Would you like to add another field? y/n: ")
             if user_wants_more.lower() == "n":
                 try_again = input(f" You have asked to search for:\n{[str(x) for x in data_fields_to_collect]}\n is this correct? y/n: ")
@@ -48,7 +39,7 @@ class ScrapeOptions:
                     done = True
                 else:
                     print(" reseting fields...")
-                    data_fields_to_collect = []        
+                    data_fields_to_collect = []       
         return data_fields_to_collect
 
     def ConfigureDataFields(self):
@@ -70,11 +61,11 @@ class ScrapeOptions:
         }
         return page_url_pattern_options
 
-    def IndividualScrape(self):
-        print("individual")
+    def individual_scrape(self):
+        print(" individual")
 
-    def SeperateScrape(self):
-        print("seperate")
+    def all_together_scrape(self):
+        print(" All Together")
 
 so = ScrapeOptions()
 print(so.data_field_options)
