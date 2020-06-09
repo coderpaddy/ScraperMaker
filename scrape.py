@@ -5,6 +5,7 @@ B. For the created scraper to be used.
 """
 
 # Dependencies
+import sys
 import requests
 from bs4 import BeautifulSoup
 
@@ -21,7 +22,7 @@ class ScrapeErrors:
             return obj.ConfigureDataFields()
         else:
             print(" Something is going wrong, please start again")
-            exit()
+            sys.exit()
 
 
 class ScrapeOptions:
@@ -33,7 +34,6 @@ class ScrapeOptions:
         self.link_for_each_data_page = self.GetPageUrlPattern() if self.has_own_data_pages is True else None
         self.start_scrape = self.IndividualScrape() if self.has_own_data_pages is True else self.SeperateScrape()
 
-    
     def AskDataFields(self):
         data_fields_to_collect = []
         done = False
@@ -55,19 +55,19 @@ class ScrapeOptions:
         data_fields_options = {}
         for data_field in self.which_data_fields:
             data_fields_options[data_field] = {
-                    "tag_type": input(" What Type of tag is the data inside? e.g div, a, h1: "),
-                    "id_type": input(" How is the field differentiated? e.g id, class, name:"),
-                    "search_term": input(" What is the identifying term? e.g title-class, attr-id:")
-                }
+                "tag_type": input(" What Type of tag is the data inside? e.g div, a, h1: "),
+                "id_type": input(" How is the field differentiated? e.g id, class, name:"),
+                "search_term": input(" What is the identifying term? e.g title-class, attr-id:")
+            }
         return data_fields_options
 
     def GetPageUrlPattern(self):
         print(" Pleas help to find the field with the individual data link...")
         page_url_pattern_options = {
-                    "tag_type": True if input(" Is the link inside an <a> tag? y/n: ").lower() == "y" else input(" What tag is the url inside? e.g <div>, <a>: "),
-                    "id_type": input(" How is the field differentiated? e.g id, class, name:"),
-                    "search_term": input(" What is the identifying term? e.g title-class, attr-id:")
-                }
+            "tag_type": True if input(" Is the link inside an <a> tag? y/n: ").lower() == "y" else input(" What tag is the url inside? e.g <div>, <a>: "),
+            "id_type": input(" How is the field differentiated? e.g id, class, name:"),
+            "search_term": input(" What is the identifying term? e.g title-class, attr-id:")
+        }
         return page_url_pattern_options
 
     def IndividualScrape(self):
