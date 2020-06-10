@@ -20,10 +20,10 @@ class ScrapeOptions:
     def __init__(self):
         self.main_url = input(" Please enter the main url to scrape including http/https: ")
         self.which_data_fields = self.ask_data_fields()
-        self.data_field_options = self.ConfigureDataFields() if len(self.which_data_fields) > 0 else ScrapeErrors.data_field_options_error(self)
+        self.data_field_options = self.configure_data_fields() if len(self.which_data_fields) > 0 else ScrapeErrors.data_field_options_error(self)
         self.has_own_data_pages = True if input("Would you like to scrape individual Product Pages? y/n: ").lower() == "y" else False
-        self.link_for_each_data_page = self.GetPageUrlPattern() if self.has_own_data_pages is True else None
-        self.start_scrape = self.individual_scrape() if self.has_own_data_pages is True else self.all_together_scrape()
+        self.link_for_each_data_page = self.get_page_url_pattern() if self.has_own_data_pages is True else None
+        self.start_scrape = self.individual_page_scrape() if self.has_own_data_pages is True else self.all_together_scrape()
 
     def ask_data_fields(self):
         data_fields_to_collect = []
@@ -42,7 +42,7 @@ class ScrapeOptions:
                     data_fields_to_collect = []       
         return data_fields_to_collect
 
-    def ConfigureDataFields(self):
+    def configure_data_fields(self):
         data_fields_options = {}
         for data_field in self.which_data_fields:
             data_fields_options[data_field] = {
@@ -52,7 +52,7 @@ class ScrapeOptions:
             }
         return data_fields_options
 
-    def GetPageUrlPattern(self):
+    def get_page_url_pattern(self):
         print(" Pleas help to find the field with the individual data link...")
         page_url_pattern_options = {
             "tag_type": True if input(" Is the link inside an <a> tag? y/n: ").lower() == "y" else input(" What tag is the url inside? e.g <div>, <a>: "),
@@ -61,7 +61,7 @@ class ScrapeOptions:
         }
         return page_url_pattern_options
 
-    def individual_scrape(self):
+    def individual_page_scrape(self):
         print(" individual")
 
     def all_together_scrape(self):
