@@ -17,11 +17,12 @@ class ScrapeOptions:
     """
     Docstring
     """
-    def __init__(self):
-        self.main_url = input(" Please enter the main url to scrape including http/https: ")
+    def __init__(self, main_url=None):
+        self.main_url = main_url if main_url is not None else input(" Please enter the main url to scrape including http/https: ")
+        self.has_own_data_pages = True if input("Does each item of data have its own page? y/n: ").lower() == "y" else False
+        self.main_soup = ScrapeTools.get_soup(self.main_url)
         self.which_data_fields = self.ask_data_fields()
         self.data_field_options = self.configure_data_fields() if len(self.which_data_fields) > 0 else ScrapeErrors.data_field_options_error(self)
-        self.has_own_data_pages = True if input("Would you like to scrape individual Product Pages? y/n: ").lower() == "y" else False
         self.link_for_each_data_page = self.get_page_url_pattern() if self.has_own_data_pages is True else None
         self.start_scrape = self.individual_page_scrape() if self.has_own_data_pages is True else self.all_together_scrape()
 
@@ -45,6 +46,7 @@ class ScrapeOptions:
     def configure_data_fields(self):
         data_fields_options = {}
         for data_field in self.which_data_fields:
+            print(f" Configuring {data_field}: \n")
             data_fields_options[data_field] = {
                 "tag_type": input(" What Type of tag is the data inside? e.g div, a, h1: "),
                 "id_type": input(" How is the field differentiated? e.g id, class, name:"),
@@ -67,5 +69,7 @@ class ScrapeOptions:
     def all_together_scrape(self):
         print(" All Together")
 
-so = ScrapeOptions()
-print(so.data_field_options)
+
+url = "https://www.blackhatworld.com/forums/brand-new-to-bhw.261/"
+so = ScrapeOptions(main_url=url)
+print(ScrapeTools.count_tags(so.main_soup))

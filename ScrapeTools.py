@@ -22,6 +22,22 @@ class ScrapeTools:
             actual_element = soup.find(tag_type, {id_type: search_term})
         return actual_element
 
+    
+    @staticmethod
+    def count_tags(soup):
+        how_much_data = int(input(" How many items of data on this page? : "))
+        all_tags = soup.find_all()
+        tag_names = [
+            {x.name: {
+                "class": try x["class"] except KeyError False,
+                "id": try x["id"] except KeyError False
+                }
+            } for x in all_tags]
+        """tag_count = {}
+        for tag in all_tags:
+            if tag in tag_count.keys()"""
+        return tag_names
+
 
     @staticmethod
     def test_get_elements(soup, element_options):
