@@ -22,21 +22,44 @@ class ScrapeTools:
             actual_element = soup.find(tag_type, {id_type: search_term})
         return actual_element
 
+    @staticmethod
+    def check_tag_attr(tag, attr):
+        try:
+            tag_attr = tag[attr]
+            return tag_attr
+        except KeyError as ke:
+            return None
     
     @staticmethod
     def count_tags(soup):
-        how_much_data = int(input(" How many items of data on this page? : "))
         all_tags = soup.find_all()
-        tag_names = [
-            {x.name: {
-                "class": try x["class"] except KeyError False,
-                "id": try x["id"] except KeyError False
-                }
-            } for x in all_tags]
-        """tag_count = {}
-        for tag in all_tags:
-            if tag in tag_count.keys()"""
-        return tag_names
+        tag_dict = {}
+        for a_tag in all_tags:
+            if a_tag:
+                all_attr = a_tag.attrs
+                if "class" in all_attr.keys():
+                    for act_class in all_attr["class"]:
+                        if a_tag.name not in tag_dict.keys():
+                            tag_dict[a_tag.name] = {
+                                "classes": {},
+                                "ids": {}
+                            }
+                        if act_class not in tag_dict[a_tag.name]["classes"].keys():
+                            tag_dict[a_tag.name]["classes"][act_class] = 1
+                        else:
+                            tag_dict[a_tag.name]["classes"][act_class] += 1
+                if "id" in all_attr.keys():
+                    if a_tag.name not in tag_dict.keys():
+                        tag_dict[a_tag.name] = {
+                            "classes": {},
+                            "ids": {}
+                        }
+                    act_id = a_tag.attrs["id"]
+                    if act_id not in tag_dict[a_tag.name]["ids"].keys():
+                        tag_dict[a_tag.name]["ids"][act_id] = 1
+                    else:
+                        tag_dict[a_tag.name]["ids"][act_id] += 1
+        return tag_dict
 
 
     @staticmethod

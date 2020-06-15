@@ -21,6 +21,8 @@ class ScrapeOptions:
         self.main_url = main_url if main_url is not None else input(" Please enter the main url to scrape including http/https: ")
         self.has_own_data_pages = True if input("Does each item of data have its own page? y/n: ").lower() == "y" else False
         self.main_soup = ScrapeTools.get_soup(self.main_url)
+        self.tag_dict_count = ScrapeTools.count_tags(self.main_soup)
+        self.amount_of_items = int(input(" How Many Items to scrape"))
         self.which_data_fields = self.ask_data_fields()
         self.data_field_options = self.configure_data_fields() if len(self.which_data_fields) > 0 else ScrapeErrors.data_field_options_error(self)
         self.link_for_each_data_page = self.get_page_url_pattern() if self.has_own_data_pages is True else None
@@ -72,4 +74,12 @@ class ScrapeOptions:
 
 url = "https://www.blackhatworld.com/forums/brand-new-to-bhw.261/"
 so = ScrapeOptions(main_url=url)
-print(ScrapeTools.count_tags(so.main_soup))
+#print(ScrapeTools.count_tags(so.main_soup))
+data_dict = ScrapeTools.count_tags(so.main_soup)
+print(type(data_dict))
+count = data_dict["h3"]["classes"]["title"]
+for key in data_dict.keys():
+    for sub_key in data_dict[key].keys():
+        for ter_key in data_dict[key][sub_key].keys():
+            if data_dict[key][sub_key][ter_key] == count:
+                print(key, sub_key, ter_key)
